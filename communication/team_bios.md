@@ -17,7 +17,7 @@ Daniela holds a Bachelor's degree from the University of Maryland-College Park. 
 ---
 
 ### **Ethan Sager**  
-Ethan is a development research professiona who currently works as a Graduate Research Assistant at gui2de and GPRL. Previously, he served as a survey research consultant at Gallup, leading survey data collection, quality control, and analysis for clients spanning universities, NGOs, and policy institutions. Ethan was the primary analyst for surveys of the Food Insecurity Experience Scale, collaborating closely with the FAO on data collection efforts for the SOFI report.  
+Ethan is a development research professional who currently works as a Graduate Research Assistant at gui2de and GPRL. Previously, he served as a survey research consultant at Gallup, leading survey data collection, quality control, and analysis for clients spanning universities, NGOs, and policy institutions. Ethan was the primary analyst for surveys of the Food Insecurity Experience Scale, collaborating closely with the FAO on data collection efforts for the SOFI report.  
 
 ---
 
