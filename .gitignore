@@ -1,0 +1,9 @@
+# Excel files
+*.xlsx
+*.xls
+
+# Other common files to ignore
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
