@@ -5,7 +5,8 @@ clear all
 set more off
 
 * Change to project directory (adjust path as needed)
-cd "/home/ethan/school/ppol5110"
+cd "/Users/danielanagar/Desktop/Capstone/ppol5110/"
+* cd "/home/ethan/school/ppol5110"
 
 * Import Excel file, skipping first row
 import excel "raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R27) firstrow clear
