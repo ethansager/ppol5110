@@ -10,7 +10,7 @@
 ****************************************************
 ** Define folder paths
 ****************************************************
-global PROJ   "C:\Users\eman7\Dropbox\ppol5110"
+global PROJ  "/Users/danielanagar/Desktop/Capstone/ppol5110"
 global RAWXLSX "$PROJ/raw_data/ACTUAL TRANSFERS 2021.xlsx"
 
 ****************************************************
@@ -20,7 +20,7 @@ global RAWXLSX "$PROJ/raw_data/ACTUAL TRANSFERS 2021.xlsx"
 ** - Converts variable names to lowercase
 ** - Clears old data before loading new one
 ****************************************************
-import excel using "$RAWXLSX", firstrow case(lower) clear
+import excel using "$RAWXLSX", cellrange(A2:Q31) firstrow case(lower) clear
 
 ****************************************************
 ** Step 3: Destring all variables except 'council'
@@ -58,6 +58,7 @@ capture rename fireservices                    fire_services
 capture rename unconditionalblockgrantadmin    unconditional_block_grant_admin
 capture rename grandtotal                      grand_total
 capture rename f                               library
+capture rename d secondary_health
 
 ****************************************************
 ** Step 5: Drop hospital related observations
@@ -65,6 +66,8 @@ capture rename f                               library
 replace council = strtrim(council)
 drop if lower(council) == "sec. hospitals"
 drop if strpos(lower(council), "hospital")
+drop if council == "NATIONAL TOTAL"
+drop if administration == .
 **cleans up extra spaces in the council names,  drops the row labeled 
 **"Sec. Hospitals" and any other row where the council name contains the word "hospital."
 
@@ -76,6 +79,7 @@ drop if strpos(lower(council), "hospital")
 gen year = 2021
 order year, last
 
+\
 save "$PROJ/analysis/00_dta/2021_Transfers.dta"
 
 
