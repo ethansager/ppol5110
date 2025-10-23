@@ -2,13 +2,12 @@
 
 clear all
 
-set more off
-
 * Change to project directory (adjust path as needed)
-cd "C:\Users\eman7\Dropbox\ppol5110"
+capture do "00.set.globals.do"
+cd $proj
 
 * Import Excel file, skipping first row
-import excel "raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R27) firstrow clear
+import excel "$raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R27) firstrow clear
 
 * Set everything to numeric 
 rename *, lower
@@ -65,4 +64,4 @@ describe
 summarize
 
 * Save processed data
-save "analysis/00_dta/transfers_2022_processed.dta", replace
+save "$dta/transfers_2022_processed.dta", replace

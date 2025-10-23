@@ -10,8 +10,9 @@
 ****************************************************
 ** Define folder paths
 ****************************************************
-global PROJ  "/Users/danielanagar/Desktop/Capstone/ppol5110"
-global RAWXLSX "$PROJ/raw_data/ACTUAL TRANSFERS 2021.xlsx"
+capture do "00.set.globals.do"
+cd $proj
+global RAWXLSX "$raw_data/ACTUAL TRANSFERS 2021.xlsx"
 
 ****************************************************
 ** Step 2: Import Excel file
@@ -79,7 +80,7 @@ drop if administration == .
 gen year = 2021
 order year, last
 
-\
-save "$PROJ/analysis/00_dta/2021_Transfers.dta"
+
+save "$dta/2021_Transfers.dta", replace
 
 

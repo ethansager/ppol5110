@@ -6,11 +6,13 @@
 //DATE LAST UPDATED: OCTOBER 13, 2025
 *=====================================================================================
 clear
-if "`c(username)'"=="danielanagar" {
-    gl wb_data "/Users/danielanagar/Desktop/Capstone/WB_data"
-	gl excel_2023 "$wb_data/ACTUAL TRANSFERS 2023.xls"
-	gl excel_2024 "$wb_data/ACTUAL TRANSFERS 2024.xlsx"
-}
+
+capture do "00.set.globals.do"
+cd $proj
+
+gl excel_2023 "$raw_data/ACTUAL TRANSFERS 2023.xls"
+gl excel_2024 "$raw_data/ACTUAL TRANSFERS 2024.xlsx"
+
 
 **# 2023
 clear
@@ -45,7 +47,9 @@ foreach var of varlist COUNCIL Education2023 Library2023 Agriculture2023 Environ
  rename supporttowardcommitees2023 support_toward_committees
  rename counciltotal council_total
  
-**# 2024
+ save "$dta/transfer_2023_processed.dta", replace 
+
+ **# 2024
 //Tranches 1 and 2 combined into Tranche 3 in Excel
 clear
 
@@ -71,4 +75,7 @@ rename supporttoddcc support_to_dc
 rename counciltotal council_total
 
 drop if _n==23
+
+save "$dta/transfer_2024_processed.dta", replace 
+ 
 

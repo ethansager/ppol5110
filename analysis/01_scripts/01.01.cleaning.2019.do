@@ -1,9 +1,10 @@
-*
-cd "/Users/danielanagar/Desktop/Capstone/ppol5110/" 
-*cd "C:\Users\eman7\Dropbox\ppol5110"
+* Set globals will provide us with relative paths per user
+capture do "00.set.globals.do"
+
+cd $proj
 
 clear
-import excel "raw_data/ACTUAL TRANSFERS 2019.xlsx", sheet("Actual Transfers By SECTORS") cellrange(A2:L35) firstrow
+import excel "$raw_data/ACTUAL TRANSFERS 2019.xlsx", sheet("Actual Transfers By SECTORS") cellrange(A2:L35) firstrow
 
 rename D SecondaryHealth
 rename F Library
@@ -38,7 +39,7 @@ drop if council == " NATIONAL TOTAL"
 drop if administration == 0 | administration == .
 
 
-save "analysis/00_dta/2019_Transfers.dta", replace
+save "$dta/2019_Transfers.dta", replace
 
 
 
