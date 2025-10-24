@@ -39,7 +39,6 @@ foreach var of varlist _all {
 }
 
 * cleaning 
-drop grand_total
 drop if council == "Note 1: Unconditional Block Grant included the following in 2018-2020; Local council Administration, Solid waste Management, Youths, Sports & Fire Services"
 drop if council == " NATIONAL TOTAL"
 drop if administration == 0 | administration == .
