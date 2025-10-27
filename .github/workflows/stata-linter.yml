@@ -33,11 +33,9 @@ jobs:
           
       - name: Install stata-linter
         run: |
-          pip install git+https://github.com/worldbank/stata-linter.git
-          
-      - name: Verify installation
-        run: |
-          stata-linter --version
+          git clone https://github.com/worldbank/stata-linter.git
+          cd stata-linter
+          pip install -e src-py/
           
       - name: Initial lint check
         id: initial_lint
@@ -45,12 +43,14 @@ jobs:
           echo "## Initial Linting Results" > lint_initial.txt
           echo "" >> lint_initial.txt
           exit_code=0
+          
           find . -type f \( -name "*.do" -o -name "*.ado" \) | while read file; do
-            echo "Linting $file"
+            echo "Linting $file" | tee -a lint_initial.txt
             if ! stata-linter lint "$file" >> lint_initial.txt 2>&1; then
               exit_code=1
             fi
           done
+          
           echo "initial_issues=$exit_code" >> $GITHUB_OUTPUT
         continue-on-error: true
           
@@ -82,8 +82,9 @@ jobs:
           echo "## Final Linting Results (After Auto-Correction)" > lint_final.txt
           echo "" >> lint_final.txt
           exit_code=0
+          
           find . -type f \( -name "*.do" -o -name "*.ado" \) | while read file; do
-            echo "Re-linting $file"
+            echo "Re-linting $file" | tee -a lint_final.txt
             if ! stata-linter lint "$file" >> lint_final.txt 2>&1; then
               exit_code=1
               echo "$file" >> failed_files.txt
