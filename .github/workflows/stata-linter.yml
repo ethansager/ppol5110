@@ -1,0 +1,162 @@
+name: Stata Linter
+
+on:
+  push:
+    paths:
+      - '**.do'
+      - '**.ado'
+  pull_request:
+    paths:
+      - '**.do'
+      - '**.ado'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install stata-linter
+        run: |
+          pip install git+https://github.com/worldbank/stata-linter.git
+          
+      - name: Verify installation
+        run: |
+          stata-linter --version
+          
+      - name: Initial lint check
+        id: initial_lint
+        run: |
+          echo "## Initial Linting Results" > lint_initial.txt
+          echo "" >> lint_initial.txt
+          exit_code=0
+          find . -type f \( -name "*.do" -o -name "*.ado" \) | while read file; do
+            echo "Linting $file"
+            if ! stata-linter lint "$file" >> lint_initial.txt 2>&1; then
+              exit_code=1
+            fi
+          done
+          echo "initial_issues=$exit_code" >> $GITHUB_OUTPUT
+        continue-on-error: true
+          
+      - name: Auto-correct style issues
+        run: |
+          echo "Running auto-corrections..."
+          find . -type f \( -name "*.do" -o -name "*.ado" \) | while read file; do
+            echo "Correcting $file"
+            stata-linter correct "$file" || true
+          done
+          
+      - name: Commit corrections
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No corrections needed"
+            echo "corrections_made=false" >> $GITHUB_ENV
+          else
+            git commit -m "style: auto-correct Stata linting issues"
+            git push
+            echo "corrections_made=true" >> $GITHUB_ENV
+          fi
+          
+      - name: Lint again after corrections
+        id: final_lint
+        run: |
+          echo "## Final Linting Results (After Auto-Correction)" > lint_final.txt
+          echo "" >> lint_final.txt
+          exit_code=0
+          find . -type f \( -name "*.do" -o -name "*.ado" \) | while read file; do
+            echo "Re-linting $file"
+            if ! stata-linter lint "$file" >> lint_final.txt 2>&1; then
+              exit_code=1
+              echo "$file" >> failed_files.txt
+            fi
+          done
+          
+          if [ $exit_code -eq 0 ]; then
+            echo "All linting issues resolved!"
+            echo "has_remaining_issues=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_remaining_issues=true" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+          
+      - name: Create GitHub Issue for remaining problems
+        if: steps.final_lint.outputs.has_remaining_issues == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const lintResults = fs.readFileSync('lint_final.txt', 'utf8');
+            const failedFiles = fs.existsSync('failed_files.txt') 
+              ? fs.readFileSync('failed_files.txt', 'utf8').trim().split('\n')
+              : [];
+            
+            const issueBody = `## Stata Linting Issues Detected
+            
+            Auto-correction has been applied, but the following issues remain and require manual intervention.
+            
+            **Commit**: ${context.sha}
+            **Branch**: ${context.ref}
+            **Workflow Run**: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+            
+            ### Failed Files
+            ${failedFiles.map(f => `- \`${f}\``).join('\n')}
+            
+            ### Detailed Linting Output
+            \`\`\`
+            ${lintResults}
+            \`\`\`
+            
+            Please review and fix these issues manually.`;
+            
+            // Check for existing open issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['stata-linting'],
+              per_page: 1
+            });
+            
+            if (issues.data.length > 0) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                body: `## New Linting Issues Found\n\n${issueBody}`
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `Stata Linting Issues - ${new Date().toISOString().split('T')[0]}`,
+                body: issueBody,
+                labels: ['stata-linting', 'code-quality']
+              });
+            }
+            
+      - name: Fail if issues remain
+        if: steps.final_lint.outputs.has_remaining_issues == 'true'
+        run: |
+          echo "::error::Linting issues remain after auto-correction. Please check the created GitHub issue."
+          exit 1
