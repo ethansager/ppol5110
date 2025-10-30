@@ -17,6 +17,7 @@ destring Library, replace
 gen Year =2019
 
 rename *, lower
+replace council = itrim(council)
 
 * Drop the variable labels 
 foreach var of varlist _all {
