@@ -64,7 +64,8 @@ capture rename d secondary_health
 ****************************************************
 ** Step 5: Drop hospital related observations
 ****************************************************
-replace council = strtrim(council)
+replace council = strtrim(council) 
+replace council = itrim(council)
 drop if lower(council) == "sec. hospitals"
 drop if strpos(lower(council), "hospital")
 drop if council == "NATIONAL TOTAL"

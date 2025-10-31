@@ -11,6 +11,7 @@ import excel "$raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R27) firstrow 
 
 * Set everything to numeric 
 rename *, lower
+replace council = itrim(council)
 
 capture confirm variable council
 if _rc {

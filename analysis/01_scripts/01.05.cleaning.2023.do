@@ -46,6 +46,7 @@ foreach var of varlist COUNCIL Education2023 Library2023 Agriculture2023 Environ
  rename unconditionalblockgrant2023 unconditional_block_grant
  rename supporttowardcommitees2023 support_toward_committees
  rename counciltotal council_total
+ replace council = "Freetown City" if council == "Freetown"
  
  save "$dta/transfer_2023_processed.dta", replace 
 
