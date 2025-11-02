@@ -1,6 +1,7 @@
 # Excel files
 *.xlsx
 *.xls
+*.dta
 
 # Other common files to ignore
 .DS_Store
