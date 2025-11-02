@@ -9,7 +9,7 @@ This repository contains the analysis, data, and documentation for the Sierra Le
 ```
 ├── analysis/           # Analysis files and outputs
 │   ├── 00_dta/        # Processed data files
-│   ├── 01_scripts/    # Analysis scripts (R, Python, etc.)
+│   ├── 01_scripts/    # Analysis scripts (R, Stata, etc.)
 │   ├── 02_output/     # Generated outputs (plots, tables, etc.)
 │   └── 03_docs/       # Documentation and reports
 ├── communication/     # Team communication materials
@@ -47,3 +47,8 @@ This repository contains the analysis, data, and documentation for the Sierra Le
     - Use snake_case for file names and variables
     - Include dates in file names where applicable
     - Avoid spaces and special characters in file names
+    - Script files should be numbered to indicate execution order and include descriptive names separated by periods (e.g., `01.data.cleaning.do`)
+
+# Lintering Guidelines
+- R scripts should be linted using [lintr](https://lintr.r-lib.org/index.html) with the tidyverse style guide
+- Stata files should be linted using [stata_lint](https://dimewiki.worldbank.org/Stata_Linter) with the DIME style guide

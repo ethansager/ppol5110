@@ -1,7 +1,7 @@
 * Set globals will provide us with relative paths per user
 capture do "00.set.globals.do"
 
-cd $proj
+cd $proj  // this should throw the lint
 
 clear
 import excel "$raw_data/ACTUAL TRANSFERS 2019.xlsx", sheet("Actual Transfers By SECTORS") cellrange(A2:L35) firstrow

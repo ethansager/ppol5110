@@ -7,12 +7,22 @@ clear
 
 capture do "00.set.globals.do"
 
-cd $dofiles
 
-do "01.01.cleaning.2019.do"
+**# Check that all scripts are ran for updates
+run "$dofiles/01.01.cleaning.2019.do"
+run "$dofiles/01.02.cleaning.2020.do"
+run "$dofiles/01.03.cleaning.2021.do"
+run "$dofiles/01.04.cleaning.2022.do"
+run "$dofiles/01.05.cleaning.2023.do"
+run "$dofiles/01.06.cleaning.2024.do"
 
 
 
+********************************************************************************
+* APPEND FIRST 2019 WITH 2020 (2019 IS THE BASE YEAR)
+********************************************************************************
+
+do "$dofiles/01.01.cleaning.2019.do"
 tempfile table19_20
 save `table19_20', replace emptyok
 append using "$dta/2020 Transfers.dta"
@@ -24,6 +34,10 @@ replace unconditionalblockgrantgena = unconditional_grant if year == 2020
 drop unconditional_grant
 drop gender_childrens_affairs
 save `table19_20', replace
+
+********************************************************************************
+* APPEND ALL TRANSFER YEARS
+********************************************************************************
 
 tempfile table19_21
 save `table19_21', replace emptyok
@@ -39,6 +53,9 @@ drop gender_childrens_affairs
 drop socialwelfare
 save `table19_21', replace
 
+********************************************************************************
+* APPEND ALL TRANSFER YEARS
+********************************************************************************
 tempfile table19_22
 save `table19_22', replace emptyok
 append using "$dta/transfers_2022_processed.dta"
@@ -54,6 +71,9 @@ drop genderandchildrensaffairs
 drop social_welfare
 save `table19_22', replace
 
+********************************************************************************
+* APPEND ALL TRANSFER YEARS
+********************************************************************************
 tempfile table19_23
 save `table19_23', replace emptyok
 append using "$dta/transfer_2023_processed.dta"
@@ -87,6 +107,9 @@ rename phc_cash_to_facils primary_health_cash_to_phu_facil
 replace grand_total = council_total if year == 2023
 drop council_total
 save `table19_23', replace
+********************************************************************************
+* APPEND ALL TRANSFER YEARS
+********************************************************************************
 
 tempfile table19_24
 save `table19_24', replace emptyok
@@ -105,3 +128,8 @@ rename support_toward_committees support_to_dc
 drop youth
 order year, a(education) 
 save `table19_24', replace
+
+********************************************************************************
+* APPEND ALL TRANSFER YEARS
+********************************************************************************
+save "$dta/transfers_merged1924", replace 
