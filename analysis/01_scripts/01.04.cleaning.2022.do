@@ -7,7 +7,7 @@ capture do "00.set.globals.do"
 cd $proj
 
 * Import Excel file, skipping first row
-import excel "$raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R27) firstrow clear
+import excel "$raw_data/ACTUAL TRANSFERS 2022.xlsx", cellrange(A2:R28) firstrow clear
 
 * Set everything to numeric 
 rename *, lower
