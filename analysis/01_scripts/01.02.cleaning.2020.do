@@ -32,6 +32,7 @@ destring basic_education, replace
 destring library, replace
 
 rename *, lower
+replace council = itrim(council)
 
 * Drop the variable labels 
 foreach var of varlist _all {

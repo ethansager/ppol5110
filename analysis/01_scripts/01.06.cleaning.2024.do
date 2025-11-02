@@ -31,6 +31,7 @@ rename marineresources marine_resources
 rename unconditionalblockgrant2024 unconditional_block_grant_2024
 rename supporttoddcc support_to_dc
 rename counciltotal council_total
+replace council = "Freetown City" if council == "Freetown"
 
 drop if _n==23
 
