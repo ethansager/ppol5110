@@ -1,3 +1,6 @@
+
+*****PRACTICE: UENDJII*****
+
 * Set globals will provide us with relative paths per user
 capture do "00.set.globals.do"
 
