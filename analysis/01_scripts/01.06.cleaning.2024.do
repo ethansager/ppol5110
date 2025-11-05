@@ -5,6 +5,11 @@
 //DATE CREATED: OCTOBER 13, 2025
 //DATE LAST UPDATED: OCTOBER 13, 2025
 *=====================================================================================
+clear
+
+capture do "00.set.globals.do"
+
+gl excel_2024 "$raw_data/ACTUAL TRANSFERS 2024.xlsx" 
 
  **# 2024
 //Tranches 1 and 2 combined into Tranche 3 in Excel

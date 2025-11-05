@@ -9,20 +9,34 @@ capture do "00.set.globals.do"
 
 
 **# Check that all scripts are ran for updates
-run "$dofiles/01.01.cleaning.2019.do"
-run "$dofiles/01.02.cleaning.2020.do"
-run "$dofiles/01.03.cleaning.2021.do"
-run "$dofiles/01.04.cleaning.2022.do"
-run "$dofiles/01.05.cleaning.2023.do"
-run "$dofiles/01.06.cleaning.2024.do"
+local start_year = 2019
 
+* The below loop checks that each cleaning script is ran 
+* and works before merging
+forvalues i = 1/6 {
+    local yr  = `start_year' + `i' - 1
+    local idx : display %02.0f `i'  
+
+    di as txt "------------------------------------------------------------"
+    di as txt "Running $dofiles/01.`idx'.cleaning.`yr'.do ..."
+    capture noisily run "$dofiles/01.`idx'.cleaning.`yr'.do"
+
+    if (_rc) {
+        di as error "ERROR: 01.`idx'.cleaning.`yr'.do failed (return code `_rc')."
+        di as error "Stopping execution of master do-file."
+        exit _rc
+    }
+    else {
+        di as result "Completed: 01.`idx'.cleaning.`yr'.do"
+    }
+}
 
 
 ********************************************************************************
 * APPEND FIRST 2019 WITH 2020 (2019 IS THE BASE YEAR)
 ********************************************************************************
 
-do "$dofiles/01.01.cleaning.2019.do"
+use "$dta/2019_Transfers.dta", clear
 tempfile table19_20
 save `table19_20', replace emptyok
 append using "$dta/2020 Transfers.dta"
@@ -36,7 +50,7 @@ drop gender_childrens_affairs
 save `table19_20', replace
 
 ********************************************************************************
-* APPEND ALL TRANSFER YEARS
+* APPEND BASE WITH 2021
 ********************************************************************************
 
 tempfile table19_21
@@ -54,7 +68,7 @@ drop socialwelfare
 save `table19_21', replace
 
 ********************************************************************************
-* APPEND ALL TRANSFER YEARS
+* APPEND BASE WITH 2022
 ********************************************************************************
 tempfile table19_22
 save `table19_22', replace emptyok
@@ -147,12 +161,89 @@ drop education
 * This should fix 2023 and 2024 missing cases 
 replace administration = support_to_dc if administration == . 
 drop support_to_dc
-* 
+* Collaspe the primary health cash into primary health 
+replace primary_health = primary_health + primary_health_cash_to_phu_facil ///
+	if primary_health_cash_to_phu_facil != . 
+drop primary_health_cash_to_phu_facil
+* save temp file before pulling in currency 
+tempfile clean_raw_currency
+save `clean_raw_currency', replace emptyok
 
 ********************************************************************************
 * ADJUST VALUES TO 2015 INTERNATIONAL DOLLARS
 ********************************************************************************
 
+* Pull WDI series for Sierra Leone (ISO3 = SLE)
+* Indicators:
+*   NY.GDP.DEFL.ZS = GDP deflator (2018=100)
+*   PA.NUS.PPP     = PPP conversion factor (LCU per Intl $)
+*   PA.NUS.FCRF    = Official exch. rate (LCU per USD)
+
+* Install if not yet installed
+ssc install wbopendata, replace
+
+* Pull relevant indicators for Sierra Leone (SL)
+wbopendata, country(SLE) ///
+	indicator(ny.gdp.defl.zs; pa.nus.ppp; pa.nus.fcrf) long clear
+
+
+local base_year = 2018
+summ ny_gdp_defl_zs if year==`base_year', meanonly
+assert r(N)==1
+scalar base_defl = r(mean)
+
+keep if year > 2018 
+
+rename countrycode iso3
+rename countryname country
+rename ny_gdp_defl_zs deflator
+rename pa_nus_ppp ppp
+keep year country deflator ppp 
+gen double deflator_index = deflator / base_defl
+label var deflator_index "GDP deflator index (base=2018)"
+
+save "$dta/wb_sierra_leone.dta", replace
+
+merge 1:m year using `clean_raw_currency'
+
+* Now take adjustment factors 
+ds year, not
+local vars `r(varlist)'
+
+foreach v of local vars {
+    * Skip string variables just in case
+    capture confirm numeric variable `v'
+    if !_rc {
+        gen double `v'_real = `v' / deflator_index
+        label var `v'_real "`: var label `v'' (constant `base_year' SLL)"
+
+        gen double `v'_intl = `v'_real / ppp
+        label var `v'_intl "`: var label `v'' (constant `base_year', PPP Intl $)"
+    }
+}
+
+* This is going to be helpful for reg etc. 
+encode council, gen(council_id)
+
+* Clean up the junk we don't need 
+keep council council_id year *_real *_intl
+drop deflator* ppp* _merge*
+
+* Sort for eye test 
+sort council year 
+
+* Set order in columns for ease of use 
+order council council_id year grand_total_real grand_total_intl
+********************************************************************************
+* EYE TEST THE TRANSFER CHANGES 
+********************************************************************************
+line grand_total_intl year, ///
+    by(council, title(" Grand Total (2018 PPP INT$) by Council") ///
+        note("Values in constant 2018 PPP INT$") ///
+        graphregion(color(white)) ///
+        yrescale xrescale) ///
+    ytitle("") xtitle("Year") ///
+    lwidth(medthick)
 
 
 ********************************************************************************
