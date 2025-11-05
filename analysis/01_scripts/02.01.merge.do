@@ -139,6 +139,25 @@ replace council = "Koidu New Sembehun" if council == "Koidu/New Sembehun City"
 replace council = "Port Loko City" if council == "Port Loko City Council"
 
 ********************************************************************************
+* CLEAN COLLASPING OF CATEGORIES FOR GRANTS
+********************************************************************************
+* This should fix the missing cases for 2024 
+replace basic_education = education if basic_education == . 
+drop education 
+* This should fix 2023 and 2024 missing cases 
+replace administration = support_to_dc if administration == . 
+drop support_to_dc
+* 
+
+********************************************************************************
+* ADJUST VALUES TO 2015 INTERNATIONAL DOLLARS
+********************************************************************************
+
+
+
+********************************************************************************
 * APPEND ALL TRANSFER YEARS
 ********************************************************************************
 save "$dta/transfers_merged1924", replace 
+
+
