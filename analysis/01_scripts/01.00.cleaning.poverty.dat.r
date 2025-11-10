@@ -1,8 +1,8 @@
 # Load required packages
-library(pdftools)
-library(tidyverse)
-library(stringr)
-
+if (!('pacman' %in% rownames(installed.packages()))) {
+  install.packages('pacman')
+}
+pacman::p_load(pdftools, tidyverse, stringr)
 
 pdf_path <- "raw_data/Poverty Mapping_Sierra Leone_FINAL.pdf"
 
@@ -152,4 +152,4 @@ clean_poverty_vec <- function(v) {
 clean_table <- clean_poverty_vec(table_lines)
 
 # 7. Write raw version to CSV
-write_lines(clean_table, "analysis/00_data/poverty_estimates_2020.csv")
+haven::write_dta(clean_table, "analysis/00_dta/poverty_estimates_2020.dta")
