@@ -158,6 +158,20 @@ merge 1:m council using "$dta/transfers_merged1924.dta"
 sort year council
 
 ********************************************************************************
+* MERGE 2018 ELECTION DATA
+********************************************************************************
+/*use "$dta/transfers_merged1924.dta", clear
+capture drop _merge
+save "$dta/transfers_merged1924.dta", replace
+
+use "$dta/2018_Elections.dta", clear
+capture drop _merge
+save "$dta/2018_Elections.dta", replace
+
+merge 1:m council using "$dta/transfers_merged1924.dta"
+sort year council*/
+
+********************************************************************************
 * CLEAN THE NAMING CONVENTIONS OF LC'S
 ********************************************************************************
 replace council = strtrim(council)
