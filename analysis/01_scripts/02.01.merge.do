@@ -31,6 +31,7 @@ forvalues i = 1/6 {
     }
 }
 
+*do "$dofiles/01.07.cleaning.elections.2018.do"
 
 ********************************************************************************
 * APPEND FIRST 2019 WITH 2020 (2019 IS THE BASE YEAR)
@@ -146,20 +147,6 @@ save `table19_24', replace
 ********************************************************************************
 * MERGE 2018 ELECTION DATA
 ********************************************************************************
-use "$dta/transfers_merged1924.dta", clear
-capture drop _merge
-save "$dta/transfers_merged1924.dta", replace
-
-use "$dta/2018_Elections.dta", clear
-capture drop _merge
-save "$dta/2018_Elections.dta", replace
-
-merge 1:m council using "$dta/transfers_merged1924.dta"
-sort year council
-
-********************************************************************************
-* MERGE 2018 ELECTION DATA
-********************************************************************************
 /*use "$dta/transfers_merged1924.dta", clear
 capture drop _merge
 save "$dta/transfers_merged1924.dta", replace
@@ -170,6 +157,19 @@ save "$dta/2018_Elections.dta", replace
 
 merge 1:m council using "$dta/transfers_merged1924.dta"
 sort year council*/
+
+merge m:1 district using "$raw_data/district_votes_2012_2018.dta"
+
+********************************************************************************
+* MERGE 2018 ELECTION DATA
+********************************************************************************
+/*use "$dta/transfers_merged1924.dta", clear
+capture drop _merge
+save "$dta/transfers_merged1924.dta", replace
+
+use "$dta/2018_Elections.dta", clear
+capture drop _merge
+save "$dta/2018_Elections.dta", replace*/
 
 ********************************************************************************
 * CLEAN THE NAMING CONVENTIONS OF LC'S
@@ -254,7 +254,7 @@ foreach v of local vars {
 encode council, gen(council_id)
 
 * Clean up the junk we don't need 
-keep council council_id year *_real *_intl
+keep council council_id district year *_real *_intl
 drop deflator* ppp* _merge*
 
 * Sort for eye test 
@@ -265,18 +265,19 @@ order council council_id year grand_total_real grand_total_intl
 ********************************************************************************
 * EYE TEST THE TRANSFER CHANGES 
 ********************************************************************************
-line grand_total_intl year, ///
+/*line grand_total_intl year, ///
     by(council, title(" Grand Total (2018 PPP INT$) by Council") ///
         note("Values in constant 2018 PPP INT$") ///
         graphregion(color(white)) ///
         yrescale xrescale) ///
     ytitle("") xtitle("Year") ///
-    lwidth(medthick)
+    lwidth(medthick)*/
 
-
+merge 1:m council using "$dta/transfers_merged1924.dta"
+sort year council
+	
 ********************************************************************************
 * APPEND ALL TRANSFER YEARS
 ********************************************************************************
 save "$dta/transfers_merged1924", replace 
-
 
