@@ -31,7 +31,7 @@ forvalues i = 1/6 {
     }
 }
 
-*do "$dofiles/01.07.cleaning.elections.2018.do"
+*do "$dofiles/01.07.cleaning.elec.do"
 
 ********************************************************************************
 * APPEND FIRST 2019 WITH 2020 (2019 IS THE BASE YEAR)
@@ -145,33 +145,6 @@ order year, a(education)
 save `table19_24', replace
 
 ********************************************************************************
-* MERGE 2018 ELECTION DATA
-********************************************************************************
-/*use "$dta/transfers_merged1924.dta", clear
-capture drop _merge
-save "$dta/transfers_merged1924.dta", replace
-
-use "$dta/2018_Elections.dta", clear
-capture drop _merge
-save "$dta/2018_Elections.dta", replace
-
-merge 1:m council using "$dta/transfers_merged1924.dta"
-sort year council*/
-
-merge m:1 district using "$raw_data/district_votes_2012_2018.dta"
-
-********************************************************************************
-* MERGE 2018 ELECTION DATA
-********************************************************************************
-/*use "$dta/transfers_merged1924.dta", clear
-capture drop _merge
-save "$dta/transfers_merged1924.dta", replace
-
-use "$dta/2018_Elections.dta", clear
-capture drop _merge
-save "$dta/2018_Elections.dta", replace*/
-
-********************************************************************************
 * CLEAN THE NAMING CONVENTIONS OF LC'S
 ********************************************************************************
 replace council = strtrim(council)
@@ -179,6 +152,67 @@ replace council = "Falaba District" if council == "Falaba District Council"
 replace council = "Karene District" if council == "Karene District Council"
 replace council = "Koidu New Sembehun" if council == "Koidu/New Sembehun City"
 replace council = "Port Loko City" if council == "Port Loko City Council"
+
+********************************************************************************
+* ASSIGN DISTRICT 
+********************************************************************************
+
+*use "$dta/transfers_merged1924.dta", clear
+
+gen district = ""
+
+* Bo
+replace district = "Bo" if inlist(council, "Bo City", "Bo District")
+
+* Bombali
+replace district = "Bombali" if inlist(council, "Bombali District", "Makeni City")
+
+* Bonthe
+replace district = "Bonthe" if inlist(council, "Bonthe District", "Bonthe Municipal")
+
+* Falaba
+replace district = "Falaba" if inlist(council, "Falaba District")
+
+* Kailahun
+replace district = "Kailahun" if inlist(council, "Kailahun District")
+
+* Kambia
+replace district = "Kambia" if inlist(council, "Kambia District")
+
+* Karene
+replace district = "Karene" if inlist(council, "Karene District")
+
+* Kenema
+replace district = "Kenema" if inlist(council, "Kenema City", "Kenema District")
+
+* Koinadugu
+replace district = "Koinadugu" if inlist(council, "Koinadugu District")
+
+* Kono
+replace district = "Kono" if inlist(council, "Kono District", "Koidu New Sembehun")
+
+* Moyamba
+replace district = "Moyamba" if inlist(council, "Moyamba District")
+
+* Port Loko
+replace district = "Port Loko" if inlist(council, "Port Loko City", "Port Loko District")
+
+* Pujehun
+replace district = "Pujehun" if inlist(council, "Pujehun District")
+
+* Tonkolili
+replace district = "Tonkolili" if inlist(council, "Tonkolili District")
+
+* Western Area Rural
+replace district = "Western Area Rural" if inlist(council, "Western Area Rural District")
+
+* Western Area Urban (Freetown)
+replace district = "Western Area Urban" if inlist(council, "Freetown City")
+
+*drop _merge
+merge m:1 district using "$raw_data/district_votes_2012_2018.dta"
+
+save "$dta/transfers_merged1924.dta", replace 
 
 ********************************************************************************
 * CLEAN COLLASPING OF CATEGORIES FOR GRANTS
@@ -232,6 +266,7 @@ label var deflator_index "GDP deflator index (base=2018)"
 
 save "$dta/wb_sierra_leone.dta", replace
 
+drop _merge
 merge 1:m year using `clean_raw_currency'
 
 * Now take adjustment factors 
@@ -253,7 +288,7 @@ foreach v of local vars {
 * This is going to be helpful for reg etc. 
 encode council, gen(council_id)
 
-* Clean up the junk we don't need 
+* Clean up the junk we don't need - DN KEEP OTHER VARS FROM ELECTION DATA
 keep council council_id district year *_real *_intl
 drop deflator* ppp* _merge*
 
@@ -273,8 +308,8 @@ order council council_id year grand_total_real grand_total_intl
     ytitle("") xtitle("Year") ///
     lwidth(medthick)*/
 
-merge 1:m council using "$dta/transfers_merged1924.dta"
-sort year council
+*merge 1:m council using "$dta/transfers_merged1924.dta"
+*sort year council
 	
 ********************************************************************************
 * APPEND ALL TRANSFER YEARS
