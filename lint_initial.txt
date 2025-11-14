@@ -1,32 +1,34 @@
 ## Initial Linting Results
 
 Linting ./analysis/01_scripts/01.06.cleaning.2024.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/00.set.globals.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/01.01.cleaning.2019.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/01.04.cleaning.2022.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/03.01.descrips.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/02.01.merge.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/01.03.cleaning.2021.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/01.05.cleaning.2023.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./analysis/01_scripts/01.02.cleaning.2020.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
+Linting ./analysis/01_scripts/01.07.cleaning.elec.do
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/run/lint.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/test/simple.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/test/bad_corrected.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/test/bad.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/test/stata_tests.do
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
 Linting ./stata-linter/src/lint.ado
-/home/runner/work/_temp/c63eff35-dd24-4f50-89d0-8ef070ed7285.sh: line 7: stata-linter: command not found
+/home/runner/work/_temp/9bd5f8fa-1b67-4b94-aeee-63cd37f741f1.sh: line 7: stata-linter: command not found
